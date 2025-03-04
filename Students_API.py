@@ -2,18 +2,23 @@ from flask import Flask, request, jsonify
 
 app = Flask(__name__)
 
-students = [
-    {
-        "id": 1,
-        'name': 'John Doe',
-        'age': 20,
-    },
-    {
-        "id": 2,
-        'name': 'Jane Doe',
+students = {
+    '1': {
+        'id': 1,
+        'name': 'John',
         'age': 21,
-    }
-]
+    },
+    '2': {
+        'id': 2,
+        'name': 'Jane',
+        'age': 22,
+    },
+    '3': {
+        'id': 3,
+        'name': 'Doe',
+        'age': 23,
+ }
+}
 
 @app.route('/', methods=['GET'])
 def check():
