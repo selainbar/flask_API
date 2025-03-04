@@ -1,0 +1,13 @@
+ask for ip
+ask for port
+print menu:
+1 get student list
+2 get specific student 
+3 save new student
+4 change student name
+5 delete student
+6 exit
+
+student:
+id, name, age
+

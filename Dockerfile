@@ -5,7 +5,9 @@ WORKDIR /app
 COPY requirements.txt requirements.txt
 RUN pip install -r requirements.txt
 
-COPY C:\Users\USER\Desktop\program\RESTful API\Students_API.py
+COPY Students_API.py .
+
+EXPOSE 5001
 
 CMD ["python", "Students_API.py"]
 
