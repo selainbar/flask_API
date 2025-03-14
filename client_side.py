@@ -26,73 +26,114 @@ def setServerURL(ip: str, port :str) -> str:
     return URL
 
 def printStudents(students):
-    print("\nAll Students:")
-    print("-" * 30)
-    for student in students:
-        print(student)
+    try:
+        print("\nAll Students:")
+        print("-" * 30)
+        for student in students.values():
+            print(f"Student id: {student['id']}")
+            print(f"Name: {student['name']}")
+            print(f"Age: {student['age']}")
+            print("-" * 30)
+    except:
+        print("Students not found")
+        
+def printStudent(student):
+    try:
+        print("\nStudent:")
+        print("-" * 30)
+        print(f"Student id: {student['id']}")
+        print(f"Name: {student['name']}")
+        print(f"Age: {student['age']}")
+        print("-" * 30)
+    except:
+        print("Student not found")
         print("-" * 30)
 
-def printStudent(student):
-    print(f"Name: {student['name']}")
-    print(f"Age: {student['age']}")
-    print("-" * 30)
 
 def main():
+    ip = input("Enter server ip: ")
+    port = input("Enter server port: ")
+    response = requests.get(f'http://{ip}:{port}/')
+    print(response.text)
+    if response.text == 'Welcome to the Students API':
+        server_enpoint = setServerURL(ip, port)
     while True:
-        ip = input("Enter server ip: ")
-        port = input("Enter server port: ")
-        response = requests.get(f'http://{ip}:{port}/')
-        print(response.text)
-        if response.text == 'Welcome to the Students API':
-            server_enpoint = setServerURL(ip, port)
-            choice = printMenu()
-            if choice == 1:
-                response = requests.get(server_enpoint+'students')
-                students = response.json()
-                if students:
-                    printStudents(students)
+            try:
+                choice = printMenu()
+                if choice == 1:
+                    response = requests.get(server_enpoint+'students')
+                    students = response.json()
+                    if response.status_code == 200:
+                        printStudents(students)
+                    else:
+                        print("-" * 30)
+                        print(response.json()['error'])
+                        print("-" * 30)
+                elif choice == 2:
+                    id = input("Enter student id: ")
+                    response = requests.get(server_enpoint+f'student/{id}')
+                    if response.status_code == 200:
+                        printStudent(response.json())
+                    else:
+                        print("-" * 30)
+                        print(response.json()['error'])
+                        print("-" * 30)
+                elif choice == 3:
+                    name = input("Enter student name: ")
+                    age = input("Enter student age: ")
+                    response = requests.post(server_enpoint+'student', json={'name': name, 'age': age})
+                    if response.status_code == 200:
+                        print("-" * 30)
+                        print('student was saved')
+                        print("-" * 30)
+                    else:
+                        print("-" * 30)
+                        print(response.json()['error'])
+                        print("-" * 30)
+                elif choice == 4:
+                    id = input("Enter student id: ")
+                    name = input("Enter new name: ")
+                    response = requests.put(server_enpoint+f'student/editname/{id}', json={'name': name})
+                    if response.status_code == 200:
+                        print("-" * 30)
+                        print("the student's name was changed")
+                        print("-" * 30)
+                    else:
+                        print("-" * 30)
+                        print(response.json()['error'])
+                        print("-" * 30)
+                elif choice == 5:
+                    id = input("Enter student id: ")
+                    age = input("Enter new age: ")
+                    response = requests.put(server_enpoint+f'student/editage/{id}', json={'age': age})
+                    if response.status_code == 200:
+                        print("-" * 30)
+                        print("the student's age was changed")
+                        print("-" * 30)
+                    else:
+                        print("-" * 30)
+                        print(response.json()['error'])
+                        print("-" * 30)
+                elif choice == 6:
+                    name = input("Enter student id: ")
+                    response = requests.delete(server_enpoint+f'student/{id}')
+                    if response.status_code == 200:
+                        print("-" * 30)
+                        print("the student was deleted")
+                        print("-" * 30)
+                    else:
+                        print("-" * 30)
+                        print(response.json()['error'])
+                        print("-" * 30)
+                elif choice == 7:
+                    user_input = input ('are you sure you want to exit?(y/n)')
+                    if user_input == 'y':
+                        break
                 else:
-                    print("No students found")
-            elif choice == 2:
-                id = input("Enter student id: ")
-                response = requests.get(server_enpoint+'student', params={'id': id})
-                if response.json():
-                    printStudent(response.json())
-                else:
-                    print('Student not found')
-            elif choice == 3:
-                name = input("Enter student name: ")
-                age = input("Enter student age: ")
-                response = requests.post(server_enpoint+'student', json={'name': name, 'age': age})
-                if response.json():
-                    print('student was saved')
-                else:
-                    print('student was not saved because of the error: \n', response.json()['error'])
-
-            elif choice == 4:
-                id = input("Enter student id: ")
-                name = input("Enter new name: ")
-                response = requests.put(server_enpoint+'student/editname', json={'id': id, 'name': name})
-                if response.json():
-                    print("the student's name was changed")
-            elif choice == 5:
-                id = input("Enter student id: ")
-                age = input("Enter new age: ")
-                response = requests.put(server_enpoint+'student/editage', json={'id': id, 'age': age})
-                if response.json():
-                    print("the student's age was changed")
-                else:
-                    print(response.json()['error'])
-            elif choice == 6:
-                name = input("Enter student name: ")
-                response = requests.delete(server_enpoint+'student', json={'name': name})
-                if response.json():
-                    print("the student was deleted")
-                else:
-                    print('student was not deleted because of the error: \n', response.json()['error'])
-            elif choice == 7:
-                input ('are you sure you want to exit?(y/n)')
-
+                    print("Invalid choice")
+            except Exception as e:
+                print("An error occurred")
+                print(e)
 if __name__ == '__main__':
     main()
 

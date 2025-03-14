@@ -2,11 +2,12 @@ ask for ip
 ask for port
 print menu:
 1 get student list
-2 get specific student 
+2 get specific student by id
 3 save new student
-4 change student name
-5 delete student
-6 exit
+4 change student name by id
+5 change student age by id
+6 delete student by id
+7 exit
 
 student:
 id, name, age
